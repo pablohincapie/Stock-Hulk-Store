@@ -77,7 +77,7 @@ public class ProductoDaoAPIImpl implements ProductoDaoAPI {
 
 		try {
 			Connection connection = DriverManager.getConnection(url, user, password);
-			String sql = "select cantidad,id_producto from producto  where referencia = ? ";
+			String sql = "select cantidad,id_producto, referencia from producto  where referencia = ? ";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, referencia);
 			resultSet = preparedStatement.executeQuery();
@@ -86,7 +86,7 @@ public class ProductoDaoAPIImpl implements ProductoDaoAPI {
 
 				productoResult.setCantidad(resultSet.getInt("cantidad"));
 				productoResult.setId_producto(resultSet.getLong("id_producto"));
-
+				productoResult.setReferencia(resultSet.getString("referencia"));
 			}
 		} finally {
 			resultSet.close();

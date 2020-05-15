@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +28,13 @@ import com.ventas.demo.service.api.ProductoServiceAPI;
  */
 
 @Controller
+@Configuration
+@PropertySource(value = { "classpath:mensajes.properties" })
 public class CompraController {
 
+	@Value("${informacion.save.success}")
+	private String info;
+	
 	@Autowired
 	private CompraServiceAPI compraServiceAPI;
 
@@ -88,6 +96,8 @@ public class CompraController {
 		compraServiceAPI.save(compra);
 
 		this.updateProducto(compra);
+		model.addAttribute("success", info);
+		model.addAttribute("compra", compraServiceAPI.getAll());
 		return "viewCompra";
 	}
 

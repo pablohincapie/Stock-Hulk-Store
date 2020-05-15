@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Administraci&oacute;n de Inventario</title>
+<!-- Bootstrap CSS -->
+<link href="../static/css/bootstrap.css" rel="stylesheet"
+	th:href="@{/css/bootstrap.css}">
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" style="background:#252850; width:100%;">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#" style="color:#ffffff; text-align:center;  padding-left:300px; font-size:40px;">Detalle de Producto</a>
+          </div>
+    </div>
+        
+      </div>
+	
+	<div style="padding-left:130px; padding-top:5px;">
+        <a href="/" class="btn btn-success">Ir al inicio</a>
+    </div>
+	<div class="container">
+		<br><br>
+		<h2 th:text="${success}" style="font-size:15px;"></h2>
+		<h2 th:text="${existeReferencia}" style="font-size:15px;"></h2>
+		<h2 style="text-align:center">Detalle Producto</h2><br><br>
+		<table class="table">
+			<thead>
+					<tr>
+						<th>C&oacute;digo de Producto</th>
+						<th>Descripci&oacute;n</th>
+						<th>Cantidad</th>
+						<th>Referencia</th>
+						<th>Precio</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				<tr th:each="producto : ${list}">
+						<td th:text="${producto.id_producto}">
+						<td th:text="${producto.descripcion}">
+						<td th:text="${producto.cantidad}">
+						<td th:text="${producto.referencia}">
+						<td th:text="${producto.precio}">
+				</tr>
+				</tr>
+				</tbody>	
+		</table><br>
+		</div>
+		
+		<div style="text-align:center ">
+			<a href="/save/0" class="btn btn-primary">Agregar Producto</a> 
+		</div>
+	
+</body>
+</html>
