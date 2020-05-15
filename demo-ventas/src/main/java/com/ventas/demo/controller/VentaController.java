@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ventas.demo.common.Util;
+import com.ventas.demo.model.Compra;
 import com.ventas.demo.model.Producto;
 import com.ventas.demo.model.Venta;
 import com.ventas.demo.service.api.ProductoServiceAPI;
@@ -41,6 +42,9 @@ public class VentaController {
 	private String invalidCantidad;
 	@Value("${informacion.save.success}")
 	private String info;
+	
+	@Value("${informacion.cantidad.numerica}")
+	 private String isNumero;
 
 	/**
 	 * Metodo que lista la informacion de la entidad venta
@@ -85,26 +89,32 @@ public class VentaController {
 	 */
 	@PostMapping("/saveVenta")
 	public String save(Venta venta, Model model, RedirectAttributes redirectAttrs) throws Exception {
-		Date fecha = new Date();
-		venta.setFecha_venta(fecha);
 
-		int cantidad = venta.getCantidad();
-		float precio = venta.getPrecio();
-		float total = util.calcularTotal(cantidad, precio);
-		venta.setTotal(total);
-
-		Producto productoResult = isValidVenta(venta);
-		if (productoResult != null && productoResult.getCantidad() > venta.getCantidad()) {
-			ventaServiceAPI.save(venta);
-			Producto producto = new Producto();
-			producto.setCantidad(productoResult.getCantidad() - venta.getCantidad());
-			producto.setReferencia(venta.getReferencia());
-			productoServiceAPI.updateProducto(producto);
-			model.addAttribute("success", info);
-			model.addAttribute("venta", ventaServiceAPI.getAll());
-		} else {
-			model.addAttribute("invalid", invalidCantidad);
+		if (!validarCampos(venta)) {
+			model.addAttribute("isNumero", isNumero);
 			model.addAttribute("venta", new Venta());
+		} else {
+			Date fecha = new Date();
+			venta.setFecha_venta(fecha);
+
+			int cantidad = venta.getCantidad();
+			float precio = venta.getPrecio();
+			float total = util.calcularTotal(cantidad, precio);
+			venta.setTotal(total);
+
+			Producto productoResult = isValidVenta(venta);
+			if (productoResult != null && productoResult.getCantidad() > venta.getCantidad()) {
+				ventaServiceAPI.save(venta);
+				Producto producto = new Producto();
+				producto.setCantidad(productoResult.getCantidad() - venta.getCantidad());
+				producto.setReferencia(venta.getReferencia());
+				productoServiceAPI.updateProducto(producto);
+				model.addAttribute("success", info);
+				model.addAttribute("venta", ventaServiceAPI.getAll());
+			} else {
+				model.addAttribute("invalid", invalidCantidad);
+				model.addAttribute("venta", new Venta());
+			}
 		}
 		return "viewVenta";
 	}
@@ -121,6 +131,15 @@ public class VentaController {
 	private Producto isValidVenta(Venta venta) throws Exception {
 		Producto productoResult = productoServiceAPI.findProductoByReferencia(venta.getReferencia());
 		return productoResult;
+	}
+	
+	private boolean validarCampos(Venta venta){
+		boolean isValid  =true;
+		if(!util.isInteger(venta.getCantidad())){
+			isValid  =false;
+		}
+		
+		return isValid;
 	}
 
 }

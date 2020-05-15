@@ -37,7 +37,10 @@ public class CompraController {
 	
 	@Autowired
 	private CompraServiceAPI compraServiceAPI;
-
+   
+	@Value("${informacion.cantidad.numerica}")
+	 private String isNumero; 
+	
 	@Autowired
 	private Util util;
 
@@ -85,19 +88,25 @@ public class CompraController {
 	 */
 	@PostMapping("/saveCompra")
 	public String save(Compra compra, Model model) throws Exception {
-		Date fecha = new Date();
-		compra.setFecha_compra(fecha);
 
-		int cantidad = compra.getCantidad();
-		float precio = compra.getPrecio();
-		float total = util.calcularTotal(cantidad, precio);
-		compra.setTotal(total);
+		if (!validarCampos(compra)) {
+			model.addAttribute("isNumero", isNumero);
+			model.addAttribute("compra", new Compra());
+		} else {
+			Date fecha = new Date();
+			compra.setFecha_compra(fecha);
 
-		compraServiceAPI.save(compra);
+			int cantidad = compra.getCantidad();
+			float precio = compra.getPrecio();
+			float total = util.calcularTotal(cantidad, precio);
+			compra.setTotal(total);
 
-		this.updateProducto(compra);
-		model.addAttribute("success", info);
-		model.addAttribute("compra", compraServiceAPI.getAll());
+			compraServiceAPI.save(compra);
+
+			this.updateProducto(compra);
+			model.addAttribute("success", info);
+			model.addAttribute("compra", compraServiceAPI.getAll());
+		}
 		return "viewCompra";
 	}
 
@@ -127,5 +136,14 @@ public class CompraController {
 			productoServiceAPI.updateProducto(producto);
 		}
 
+	}
+	
+	private boolean validarCampos(Compra compra){
+		boolean isValid  =true;
+		if(!util.isInteger(compra.getCantidad())){
+			isValid  =false;
+		}
+		
+		return isValid;
 	}
 }

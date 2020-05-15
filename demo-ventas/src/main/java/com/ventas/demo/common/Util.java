@@ -28,4 +28,14 @@ public class Util {
 		  // Null-safe, short-circuit evaluation.
 		  return s == null || s.trim().isEmpty();
 	}
+	
+	public boolean isInteger(int numero){
+	    try{
+	        if(numero >0)
+	        return true;
+	    }catch(NumberFormatException e){
+	       
+	    }
+	    return false;
+	}
 }
