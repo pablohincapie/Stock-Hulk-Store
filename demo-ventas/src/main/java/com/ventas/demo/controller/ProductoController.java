@@ -94,7 +94,8 @@ public class ProductoController {
 		}else {
 			model.addAttribute("existeReferencia", existeReferencia);	
 		}
-		return "redirect:/";
+		model.addAttribute("list", productoServiceAPI.getAll());
+		return "viewProducto";
 	}
 
 	/**

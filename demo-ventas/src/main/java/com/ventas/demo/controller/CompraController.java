@@ -97,6 +97,7 @@ public class CompraController {
 
 		this.updateProducto(compra);
 		model.addAttribute("success", info);
+		model.addAttribute("compra", compraServiceAPI.getAll());
 		return "viewCompra";
 	}
 

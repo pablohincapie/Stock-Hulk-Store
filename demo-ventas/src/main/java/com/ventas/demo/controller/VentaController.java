@@ -37,7 +37,7 @@ public class VentaController {
 	private Util util;
 	@Autowired
 	private ProductoServiceAPI productoServiceAPI;
-	@Value("${informacion.producto.inexistente}")
+	@Value("${informacion.venta.invalid}")
 	private String invalidCantidad;
 	@Value("${informacion.save.success}")
 	private String info;
@@ -101,6 +101,7 @@ public class VentaController {
 			producto.setReferencia(venta.getReferencia());
 			productoServiceAPI.updateProducto(producto);
 			model.addAttribute("success", info);
+			model.addAttribute("venta", ventaServiceAPI.getAll());
 		} else {
 			model.addAttribute("invalid", invalidCantidad);
 			model.addAttribute("venta", new Venta());
