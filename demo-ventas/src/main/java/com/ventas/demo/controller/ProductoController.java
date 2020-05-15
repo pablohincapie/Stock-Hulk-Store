@@ -38,7 +38,10 @@ public class ProductoController {
 	@Value("${informacion.existe.referencia}")
 	 private String existeReferencia;
 	
-	 @Autowired
+	@Value("${informacion.cantidad.numerica}")
+	 private String isNumero; 
+	
+	@Autowired
 	private ProductoServiceAPI productoServiceAPI;
 	 
 	 @Autowired
@@ -88,11 +91,15 @@ public class ProductoController {
 	@PostMapping("/save")
 	public String save(Producto producto, Model model) throws Exception {
 		Producto productoResult = validarReferencia(producto);
-		if(util.chkEmpty(productoResult.getReferencia())){
-		productoServiceAPI.save(producto);
-		model.addAttribute("success", info);
-		}else {
-			model.addAttribute("existeReferencia", existeReferencia);	
+		if (!validarCampos(producto)) {
+			model.addAttribute("isNumero", isNumero);
+		}else{
+		if (util.chkEmpty(productoResult.getReferencia())) {
+			productoServiceAPI.save(producto);
+			model.addAttribute("success", info);
+		} else {
+			model.addAttribute("existeReferencia", existeReferencia);
+		}
 		}
 		model.addAttribute("list", productoServiceAPI.getAll());
 		return "viewProducto";
@@ -125,6 +132,15 @@ public class ProductoController {
 	private Producto validarReferencia(Producto producto) throws Exception {
 		Producto productoResult = productoServiceAPI.findProductoByReferencia(producto.getReferencia());
 		return productoResult;
+	}
+	
+	private boolean validarCampos(Producto producto){
+		boolean isValid  =true;
+		if(!util.isInteger(producto.getCantidad())){
+			isValid  =false;
+		}
+		
+		return isValid;
 	}
 
 }
