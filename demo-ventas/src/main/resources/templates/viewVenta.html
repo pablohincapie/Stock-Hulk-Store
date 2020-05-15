@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Administraci&oacute;n de ventas</title>
+<!-- Bootstrap CSS -->
+<link href="../static/css/bootstrap.css" rel="stylesheet"
+	th:href="@{/css/bootstrap.css}">
+
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top" style="background:#252850; width:100%;">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#" style="color:#ffffff; text-align:center;  padding-left:300px; font-size:40px;">Hist&oacute;rico de Ventas</a>
+          </div>
+     
+
+        </div>
+        
+      </div>
+	
+	<span class="alert alert-info" style="margin-left: 75%;"> <a
+		href="#" class="alert-link">La venta se registro correctamente</a>
+	</span>
+	<div style="padding-left:130px; padding-top:5px;">
+                
+                 <a href="/compra" class="btn btn-warning">Ver Compras</a>
+                  <a href="/" class="btn btn-success">Ir al inicio</a>
+                  
+            </div>
+	<div class="container">
+		
+		<br><br>
+		<div th:classappend="'alert-' + (${clase != null} ? ${clase} : info)"
+			th:if="${mensaje != null}" th:text="${mensaje}" class="alert">
+		</div>
+		
+		<h2 style="text-align:center">Registro Venta</h2><br><br>
+		<table class="table">
+			<thead>
+					<tr>
+						<th>C&oacute;digo de Venta</th>
+						<th>Descripci&oacute;n</th>
+						<th>Cantidad</th>
+						<th>Referencia</th>
+						<th>Precio</th>
+						<th>Total</th>
+						<th>Fecha Venta</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="venta: ${venta}">
+					<td th:text="${venta.id_venta}">
+					<td th:text="${venta.descripcion}">
+					<td th:text="${venta.cantidad}">
+					<td th:text="${venta.referencia}">
+					<td th:text="${venta.precio}">
+					<td th:text="${venta.total}">
+					<td th:text="${#dates.format(venta.fecha_venta, 'dd-MMM-yyyy')}"></td>
+				</tr>
+				</tbody>	
+		</table><br>
+		</div>
+		
+		<div style="text-align:center ">
+			<a href="/saveVenta/0" class="btn btn-primary">Vender Producto</a>
+		</div>
+	
+</body>
+</html>
