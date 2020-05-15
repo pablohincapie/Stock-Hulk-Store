@@ -71,5 +71,3 @@ TABLESPACE pg_default;
 ALTER TABLE public.venta
     OWNER to postgres;	
 	
-Insert into producto values (1,'Juguetes',10, '012',80000);
-Insert into producto values (2,'Comics',10, '018',16000);
