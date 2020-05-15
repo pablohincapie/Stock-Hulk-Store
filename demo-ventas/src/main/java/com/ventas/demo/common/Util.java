@@ -23,4 +23,9 @@ public class Util {
 		float total = cantidad * precio;
 		return total;
 	}
+	
+	public static boolean chkEmpty( final String s ) {
+		  // Null-safe, short-circuit evaluation.
+		  return s == null || s.trim().isEmpty();
+	}
 }

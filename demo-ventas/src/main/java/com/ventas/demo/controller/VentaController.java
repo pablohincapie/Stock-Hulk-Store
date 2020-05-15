@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,8 @@ import com.ventas.demo.service.api.VentaServiceAPI;
  * @author Pablo Hincapie Creado el 09/05/2020 a 03:18:33 pm <br>
  */
 @Controller
+@Configuration
+@PropertySource(value = { "classpath:mensajes.properties" })
 public class VentaController {
 	@Autowired
 	private VentaServiceAPI ventaServiceAPI;
@@ -32,6 +37,10 @@ public class VentaController {
 	private Util util;
 	@Autowired
 	private ProductoServiceAPI productoServiceAPI;
+	@Value("${informacion.producto.inexistente}")
+	private String invalidCantidad;
+	@Value("${informacion.save.success}")
+	private String info;
 
 	/**
 	 * Metodo que lista la informacion de la entidad venta
@@ -42,6 +51,7 @@ public class VentaController {
 	 */
 	@RequestMapping("/venta")
 	public String index(Model model) {
+		ventaServiceAPI.getAll();
 		model.addAttribute("venta", ventaServiceAPI.getAll());
 		return "viewVenta";
 	}
@@ -90,8 +100,10 @@ public class VentaController {
 			producto.setCantidad(productoResult.getCantidad() - venta.getCantidad());
 			producto.setReferencia(venta.getReferencia());
 			productoServiceAPI.updateProducto(producto);
+			model.addAttribute("success", info);
 		} else {
-			System.out.print("ingreso");
+			model.addAttribute("invalid", invalidCantidad);
+			model.addAttribute("venta", new Venta());
 		}
 		return "viewVenta";
 	}
